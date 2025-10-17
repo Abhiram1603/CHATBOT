@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF--8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VSAI - Your AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Exo:wght@500;700&display=swap" rel="stylesheet">
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.25.0",
+    "uuid": "https://aistudiocdn.com/uuid@^13.0.0",
+    "cors": "https://aistudiocdn.com/cors@^2.8.5",
+    "mongoose": "https://aistudiocdn.com/mongoose@^8.19.1",
+    "dotenv": "https://aistudiocdn.com/dotenv@^17.2.3",
+    "express": "https://aistudiocdn.com/express@^5.1.0",
+    "nodemailer": "https://aistudiocdn.com/nodemailer@^7.0.9",
+    "jsonwebtoken": "https://aistudiocdn.com/jsonwebtoken@^9.0.2",
+    "passport": "https://aistudiocdn.com/passport@^0.7.0",
+    "passport-google-oauth20": "https://aistudiocdn.com/passport-google-oauth20@^2.0.0",
+    "express-session": "https://aistudiocdn.com/express-session@^1.18.2",
+    "bcryptjs": "https://aistudiocdn.com/bcryptjs@^3.0.2"
+  }
+}
+</script>
+<style>
+  :root {
+    --bg-primary: #05070D;
+    --bg-secondary: #11151F;
+    --border-primary: #2C3240;
+    --text-primary: #F0F2F5;
+    --text-secondary: #A0A8B4;
+    --accent-cyan: #00F5D4;
+    --accent-cyan-dark: #00BFA5;
+    --accent-blue: #00A9FF;
+    --accent-magenta: #F72585;
+    --toggle-bg-inactive: #4B5563;
+    --strength-weak: #F72585;
+    --strength-medium: #FFC107;
+    --strength-strong: #00F5D4;
+  }
+  [data-theme='light'] {
+    --bg-primary: #F8F9FA;
+    --bg-secondary: #FFFFFF;
+    --border-primary: #E9ECEF;
+    --text-primary: #212529;
+    --text-secondary: #6C757D;
+    --accent-cyan: #14B8A6;
+    --accent-cyan-dark: #0F766E;
+    --accent-blue: #0D6EFD;
+    --accent-magenta: #D90429;
+    --toggle-bg-inactive: #E5E7EB;
+    --strength-weak: #D90429;
+    --strength-medium: #FFB700;
+    --strength-strong: #14B8A6;
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .font-heading {
+    font-family: 'Exo', sans-serif;
+  }
+  .glassmorphism {
+    background: rgba(17, 21, 31, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-primary);
+  }
+  [data-theme='light'] .glassmorphism {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-primary);
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+  @keyframes slide-in-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+  .slide-in-right {
+    animation: slide-in-right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px var(--accent-cyan); }
+    50% { box-shadow: 0 0 15px var(--accent-cyan); }
+  }
+  .button-glow:hover {
+    animation: glow 1.5s infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.5; }
+  }
+  .pulse-animation {
+    animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  }
+
+  /* Aurora Animation */
+  @keyframes aurora {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .aurora-bg {
+    background: linear-gradient(-45deg, #0A0D14, #10141C, #132244, #3B094C);
+    background-size: 400% 400%;
+    animation: aurora 15s ease infinite;
+  }
+  [data-theme='light'] .aurora-bg {
+    background: linear-gradient(-45deg, #FFFFFF, #E0E7FF, #D1FAE5, #FCE7F3);
+    background-size: 400% 400%;
+    animation: aurora 20s ease infinite;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-secondary); 
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #3a414e; 
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4b5563; 
+  }
+   [data-theme='light'] ::-webkit-scrollbar-thumb {
+    background: #bdc3cf; 
+  }
+  [data-theme='light'] ::-webkit-scrollbar-thumb:hover {
+    background: #aab1bd; 
+  }
+
+
+  /* Text Selection */
+  ::selection {
+    background: var(--accent-cyan-dark);
+    color: white;
+  }
+</style>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

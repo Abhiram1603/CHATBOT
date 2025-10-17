@@ -1,0 +1,7 @@
+{
+  "name": "VSAI2.0",
+  "description": "A versatile, multimodal AI assistant powered by Gemini. It supports text, voice, and image interactions, performs real-time web searches with citations, and offers intelligent features like code generation and language translation in a friendly, conversational interface.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
